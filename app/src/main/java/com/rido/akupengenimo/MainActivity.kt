@@ -22,19 +22,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rido.akupengenimo.ui.theme.AkuPengenIMOTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            // SnackbarHostState untuk mengelola tampilan snackbar
+            val snackbarHostState = remember { SnackbarHostState() }
+            
             AkuPengenIMOTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
+                    snackbarHost = { SnackbarHost(snackbarHostState) }, // Komponen SnackbarHost
                     containerColor = MaterialTheme.colorScheme.background
                 ) { innerPadding ->
                     HeroScreen(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        snackbarHostState = snackbarHostState
                     )
                 }
             }
@@ -43,7 +50,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun HeroScreen(modifier: Modifier = Modifier) {
+fun HeroScreen(modifier: Modifier = Modifier, snackbarHostState: SnackbarHostState) {
     val heroes = getListHeroes()
     
     Column(
@@ -60,7 +67,7 @@ fun HeroScreen(modifier: Modifier = Modifier) {
         
         LazyColumn {
             items(heroes) { hero ->
-                HeroItem(hero = hero)
+                HeroItem(hero = hero, snackbarHostState = snackbarHostState)
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
@@ -68,10 +75,14 @@ fun HeroScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun HeroItem(hero: Hero) {
+fun HeroItem(hero: Hero, snackbarHostState: SnackbarHostState) {
     var showDetails by remember { mutableStateOf(false) }
     var isFavorite by remember { mutableStateOf(false) }
     
+    // Konsep Coroutine & State (Modul 9)
+    var isLoading by remember { mutableStateOf(false) } // State isLoading
+    val scope = rememberCoroutineScope() // rememberCoroutineScope
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -132,13 +143,35 @@ fun HeroItem(hero: Hero) {
                 
                 Spacer(modifier = Modifier.width(8.dp))
                 
+                // Implementasi Coroutine pada tombol Favorite
                 IconButton(
-                    onClick = { isFavorite = !isFavorite }
+                    onClick = {
+                        scope.launch { // Menjalankan coroutine
+                            isLoading = true // Mengaktifkan loading
+                            delay(2000) // Delay simulasi proses async
+                            isFavorite = !isFavorite
+                            isLoading = false // Mematikan loading
+                            
+                            // Feedback melalui Snackbar
+                            val message = if (isFavorite) "${hero.name} ditambahkan ke Favorit" else "${hero.name} dihapus dari Favorit"
+                            snackbarHostState.showSnackbar(message)
+                        }
+                    },
+                    enabled = !isLoading // Button disable saat loading
                 ) {
-                    Text(
-                        text = if (isFavorite) "❤️" else "🤍",
-                        fontSize = 24.sp
-                    )
+                    if (isLoading) {
+                        // Indikator Loading
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    } else {
+                        Text(
+                            text = if (isFavorite) "❤️" else "🤍",
+                            fontSize = 24.sp
+                        )
+                    }
                 }
             }
 
