@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.rido.akupengenimo.ui.theme.AkuPengenIMOTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -30,13 +31,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            // SnackbarHostState untuk mengelola tampilan snackbar
             val snackbarHostState = remember { SnackbarHostState() }
             
             AkuPengenIMOTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    snackbarHost = { SnackbarHost(snackbarHostState) }, // Komponen SnackbarHost
+                    snackbarHost = { SnackbarHost(snackbarHostState) },
                     containerColor = MaterialTheme.colorScheme.background
                 ) { innerPadding ->
                     HeroScreen(
@@ -79,9 +79,8 @@ fun HeroItem(hero: Hero, snackbarHostState: SnackbarHostState) {
     var showDetails by remember { mutableStateOf(false) }
     var isFavorite by remember { mutableStateOf(false) }
     
-    // Konsep Coroutine & State (Modul 9)
-    var isLoading by remember { mutableStateOf(false) } // State isLoading
-    val scope = rememberCoroutineScope() // rememberCoroutineScope
+    var isLoading by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -97,10 +96,12 @@ fun HeroItem(hero: Hero, snackbarHostState: SnackbarHostState) {
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(id = hero.photo),
+                AsyncImage(
+                    model = hero.photoUrl,
                     contentDescription = hero.name,
                     contentScale = ContentScale.Crop,
+                    placeholder = painterResource(id = hero.photo),
+                    error = painterResource(id = hero.photo),
                     modifier = Modifier
                         .size(80.dp)
                         .clip(RoundedCornerShape(12.dp))
@@ -143,24 +144,21 @@ fun HeroItem(hero: Hero, snackbarHostState: SnackbarHostState) {
                 
                 Spacer(modifier = Modifier.width(8.dp))
                 
-                // Implementasi Coroutine pada tombol Favorite
                 IconButton(
                     onClick = {
-                        scope.launch { // Menjalankan coroutine
-                            isLoading = true // Mengaktifkan loading
-                            delay(2000) // Delay simulasi proses async
+                        scope.launch {
+                            isLoading = true
+                            delay(2000)
                             isFavorite = !isFavorite
-                            isLoading = false // Mematikan loading
+                            isLoading = false
                             
-                            // Feedback melalui Snackbar
                             val message = if (isFavorite) "${hero.name} ditambahkan ke Favorit" else "${hero.name} dihapus dari Favorit"
                             snackbarHostState.showSnackbar(message)
                         }
                     },
-                    enabled = !isLoading // Button disable saat loading
+                    enabled = !isLoading
                 ) {
                     if (isLoading) {
-                        // Indikator Loading
                         CircularProgressIndicator(
                             modifier = Modifier.size(24.dp),
                             strokeWidth = 2.dp,
@@ -232,7 +230,9 @@ private fun getListHeroes(): List<Hero> {
     
     return listOf(
         Hero(
-            "Tigreal", "Tank - Crowd Control", R.drawable.tigreal,
+            "Tigreal", "Tank - Crowd Control", 
+            "https://img.esportsku.com/wp-content/uploads/2022/04/tigreal-revamped-mobile-legends-1536x864.jpg",
+            R.drawable.tigreal,
             listOf(
                 Skill("Skill 1: Attack Wave", lorem),
                 Skill("Skill 2: Sacred Hammer", lorem),
@@ -240,7 +240,9 @@ private fun getListHeroes(): List<Hero> {
             )
         ),
         Hero(
-            "Miya", "Marksman - Attack Speed", R.drawable.miya,
+            "Miya", "Marksman - Attack Speed", 
+            "https://media.esports.gg/uploads/2025/04/Miya-ML-968x544.jpg",
+            R.drawable.miya,
             listOf(
                 Skill("Skill 1: Moon Arrow", lorem),
                 Skill("Skill 2: Arrow of Eclipse", lorem),
@@ -248,7 +250,9 @@ private fun getListHeroes(): List<Hero> {
             )
         ),
         Hero(
-            "Balmond", "Fighter - True Damage", R.drawable.balmond,
+            "Balmond", "Fighter - True Damage", 
+            "https://i.pinimg.com/originals/20/29/ec/2029ec56a2dc5b069e35fe2f9958701c.jpg",
+            R.drawable.balmond,
             listOf(
                 Skill("Skill 1: Soul Lock", lorem),
                 Skill("Skill 2: Cyclone Sweep", lorem),
@@ -256,7 +260,9 @@ private fun getListHeroes(): List<Hero> {
             )
         ),
         Hero(
-            "Layla", "Marksman - Long Range", R.drawable.layla,
+            "Layla", "Marksman - Long Range", 
+            "https://wallpapercave.com/wp/wp8966953.jpg",
+            R.drawable.layla,
             listOf(
                 Skill("Skill 1: Malefic Bomb", lorem),
                 Skill("Skill 2: Void Projectile", lorem),
@@ -264,7 +270,9 @@ private fun getListHeroes(): List<Hero> {
             )
         ),
         Hero(
-            "Zilong", "Fighter/Assassin - Burst", R.drawable.zilong,
+            "Zilong", "Fighter/Assassin - Burst", 
+            "https://img.esportsku.com/wp-content/uploads/2020/11/zilong.jpg",
+            R.drawable.zilong,
             listOf(
                 Skill("Skill 1: Spear Flip", lorem),
                 Skill("Skill 2: Spear Strike", lorem),

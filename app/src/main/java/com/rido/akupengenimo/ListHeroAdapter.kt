@@ -1,4 +1,4 @@
-package com.rido.akupengenimo // Sesuaikan package-mu
+package com.rido.akupengenimo
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 
 class ListHeroAdapter(private val listHero: ArrayList<Hero>) : RecyclerView.Adapter<ListHeroAdapter.ListViewHolder>() {
 
@@ -15,10 +16,16 @@ class ListHeroAdapter(private val listHero: ArrayList<Hero>) : RecyclerView.Adap
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        val (name, description, photo) = listHero[position]
-        holder.imgPhoto.setImageResource(photo)
-        holder.tvName.text = name
-        holder.tvDescription.text = description
+        val hero = listHero[position]
+        
+        holder.imgPhoto.load(hero.photoUrl) {
+            placeholder(hero.photo)
+            error(hero.photo)
+            crossfade(true)
+        }
+        
+        holder.tvName.text = hero.name
+        holder.tvDescription.text = hero.description
     }
 
     override fun getItemCount(): Int = listHero.size
