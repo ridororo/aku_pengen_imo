@@ -11,6 +11,7 @@ composeBom = "2024.06.00"
 appcompat = "1.7.1"
 material = "1.12.0"
 coil = "2.6.0"
+gson = "2.10.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,6 +32,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
+google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
