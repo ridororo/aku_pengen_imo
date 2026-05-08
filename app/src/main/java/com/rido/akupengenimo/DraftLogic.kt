@@ -2,7 +2,7 @@ package com.rido.akupengenimo
 
 import com.rido.akupengenimo.data.remote.HeroDraft
 
-// Data class untuk hasil perhitungan skor per hero
+
 data class DraftResult(
     val heroId: Int,
     var score: Float,
@@ -10,7 +10,7 @@ data class DraftResult(
     val cons: MutableList<String> = mutableListOf()
 )
 
-// Fungsi hitung probabilitas kemenangan tim
+
 fun calculateWinRate(
     allies: List<HeroDraft?>,
     enemies: List<HeroDraft?>,
@@ -43,7 +43,7 @@ fun calculateWinRate(
     return Pair(allyWinRate, 100f - allyWinRate)
 }
 
-// Fungsi hitung rekomendasi hero per individu
+
 fun calculateSuggestion(
     allies: List<HeroDraft?>,
     enemies: List<HeroDraft?>,

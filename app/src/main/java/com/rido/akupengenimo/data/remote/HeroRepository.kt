@@ -7,7 +7,7 @@ class HeroRepository(private val apiService: DraftApiService) {
             val response = apiService.getDraftHeroes()
             Result.success(response)
         } catch (e: Exception) {
-            // Ini try-catch buat nangkep kalau internet mati (syarat LKP)
+
             Result.failure(e)
         }
     }

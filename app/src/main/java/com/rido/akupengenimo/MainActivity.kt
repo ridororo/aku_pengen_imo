@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     snackbarHost = { SnackbarHost(snackbarHostState) },
                     containerColor = MaterialTheme.colorScheme.background,
-                    // INI DIA BOTTOM NAVIGATION-NYA
+
                     bottomBar = {
                         NavigationBar(
                             containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -98,7 +98,7 @@ class MainActivity : ComponentActivity() {
                         )
                         2 -> DraftScreen(
                             modifier = Modifier.padding(innerPadding),
-                            repository = repository // Pake variabel repository yang di atas tadi
+                            repository = repository
                         )
                     }
                 }
@@ -170,7 +170,7 @@ fun HeroItem(hero: Hero, snackbarHostState: SnackbarHostState) {
     var isFavorite by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
 
-    // 1. Tambahkan state untuk mengontrol Dialog Counter
+
     var showCounterDialog by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
@@ -178,7 +178,7 @@ fun HeroItem(hero: Hero, snackbarHostState: SnackbarHostState) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            // 2. Klik area Card untuk buka strategi counter
+
             .clickable { showCounterDialog = true },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
@@ -247,7 +247,7 @@ fun HeroItem(hero: Hero, snackbarHostState: SnackbarHostState) {
         }
     }
 
-    // 3. Panggil CounterDialog di luar Card agar muncul di atas layar
+
     if (showCounterDialog) {
         CounterDialog(
             hero = hero,
@@ -259,18 +259,18 @@ fun HeroItem(hero: Hero, snackbarHostState: SnackbarHostState) {
 fun SkillCard(skill: Skill) {
     Card(
         modifier = Modifier
-            .width(220.dp) // Sedikit lebih lebar biar enak dibaca
-            .height(150.dp), // Tinggi dipatok biar rapi di LazyRow
+            .width(220.dp)
+            .height(150.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
     ) {
-        // Tambahkan rememberScrollState dan modifier verticalScroll
+
         val scrollState = rememberScrollState()
 
         Column(
             modifier = Modifier
                 .padding(12.dp)
-                .verticalScroll(scrollState) // INI KUNCINYA: Biar bisa di-scroll dalemnya
+                .verticalScroll(scrollState) /
         ) {
             Text(
                 text = skill.title,
@@ -281,7 +281,7 @@ fun SkillCard(skill: Skill) {
             Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = skill.description,
-                style = MaterialTheme.typography.bodySmall, // Pakai bodySmall biar lebih muat banyak
+                style = MaterialTheme.typography.bodySmall,
                 lineHeight = 16.sp
             )
         }
@@ -293,7 +293,7 @@ fun SkillCard(skill: Skill) {
 fun ItemScreen(modifier: Modifier = Modifier) {
     var searchQuery by remember { mutableStateOf("") }
 
-    // 1. Panggil data dari Object Provider yang udah kita buat tadi
+
     val allItems = remember { ItemDataProvider.getListItems() }
 
     val filteredItems = remember(searchQuery) {

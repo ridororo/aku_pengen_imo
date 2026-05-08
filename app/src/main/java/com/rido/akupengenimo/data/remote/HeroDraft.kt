@@ -17,7 +17,6 @@ data class DraftIcons(
     val rectangle: String
 )
 
-// Data class untuk hasil perhitungan skor
 data class DraftResult(
     val heroId: Int,
     var score: Float,

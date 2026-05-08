@@ -8,16 +8,16 @@ object HeroDataProvider {
     private var iconMap: Map<Int, String> = emptyMap()
     private var counterData: List<HeroCounter> = emptyList()
 
-    // Fungsi buat baca file JSON dari folder assets
+
     fun loadExtraData(context: Context) {
         val gson = Gson()
         try {
-            // 1. Baca Map Icon (buat nyari link foto bulet berdasarkan ID)
+
             val iconJson = context.assets.open("roundIconMap.json").bufferedReader().use { it.readText() }
             val rawIconMap: Map<String, Int> = gson.fromJson(iconJson, object : TypeToken<Map<String, Int>>() {}.type)
             iconMap = rawIconMap.entries.associate { it.value to it.key }
 
-            // 2. Baca Data Counter
+
             val counterJson = context.assets.open("heroescounter.json").bufferedReader().use { it.readText() }
             counterData = gson.fromJson(counterJson, object : TypeToken<List<HeroCounter>>() {}.type)
         } catch (e: Exception) {
